@@ -80,3 +80,44 @@ def sinusoidal_time_embedding(t: torch.Tensor, embed_dim: int) -> torch.Tensor:
     # Concatenate [sin, cos] along the feature dimension -> (batch, embed_dim)
     return torch.cat([torch.sin(args), torch.cos(args)], dim=-1)
 
+# Step 8 - init_velocity_mlp
+import math
+import torch
+
+
+def init_velocity_mlp(in_dim: int, hidden_dim: int, time_embed_dim: int, seed: int) -> dict[str, torch.Tensor]:
+    """Return a seeded parameter dict for a two-hidden-layer velocity MLP.
+
+    Args:
+        in_dim: Dimension of the spatial state x.
+        hidden_dim: Number of units in each hidden layer.
+        time_embed_dim: Dimension of the sinusoidal time embedding (even integer).
+        seed: Random seed for parameter initialization.
+
+    Returns:
+        dict containing keys 'W1', 'b1', 'W2', 'b2', 'W3', 'b3' with float32
+        tensors requiring gradients.
+    """
+    torch.manual_seed(seed)
+
+    # Layer dimensions (n_in, n_out)
+    dims = [
+        (in_dim + time_embed_dim, hidden_dim),  # Layer 1
+        (hidden_dim, hidden_dim),                # Layer 2
+        (hidden_dim, in_dim),                    # Layer 3
+    ]
+
+    params = {}
+    for i, (n_in, n_out) in enumerate(dims, start=1):
+        # Glorot normal initialization: std = sqrt(2 / (n_in + n_out))
+        scale = math.sqrt(2.0 / (n_in + n_out))
+        w = (torch.randn(n_in, n_out, dtype=torch.float32) * scale).requires_grad_(True)
+        
+        # Zero bias (torch.zeros does not advance the RNG)
+        b = torch.zeros(n_out, dtype=torch.float32, requires_grad=True)
+
+        params[f"W{i}"] = w
+        params[f"b{i}"] = b
+
+    return params
+
