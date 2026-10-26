@@ -14,6 +14,7 @@ python scaffold.py
 - [x] **2.** target_velocity
 - [x] **3.** sample_uniform_time
 - [x] **4.** sample_gaussian_noise
+- [x] **5.** make_flow_batch
 
 ---
 

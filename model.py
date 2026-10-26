@@ -32,3 +32,14 @@ def sample_gaussian_noise(x, seed):
     torch.manual_seed(seed)
     return torch.randn_like(x)
 
+# Step 5 - make_flow_batch
+def make_flow_batch(x1, seed):
+    """Given data x1, sample noise and time and return xt, target velocity, and t."""
+    # TODO: Implement `make_flow_batch` to assemble one flow-matching training triple from a batch of data....
+    batch, dim = x1.shape
+    x0 = sample_gaussian_noise(x1, seed)
+    v = target_velocity(x0, x1)
+    t = sample_uniform_time(batch, seed)
+    xt = interpolate_linear(x0, x1, t)
+    return xt, v, t
+
