@@ -43,3 +43,9 @@ def make_flow_batch(x1, seed):
     xt = interpolate_linear(x0, x1, t)
     return xt, v, t
 
+# Step 6 - flow_matching_loss
+def flow_matching_loss(v_pred, v_target):
+    """Score a predicted velocity against the straight-path target."""
+    # TODO: Implement `flow_matching_loss` to score predicted velocities against a target.
+    return torch.mean((v_pred-v_target)**2)
+
