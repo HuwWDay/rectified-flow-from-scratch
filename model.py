@@ -162,3 +162,34 @@ def velocity_mlp_forward(x: torch.Tensor, t, params: dict, time_embed_dim: int) 
 
     return v
 
+# Step 10 - make_mixture_dataset
+import torch
+
+
+def make_mixture_dataset(
+    centers: torch.Tensor, n_per_component: int, std: float, seed: int
+) -> torch.Tensor:
+    """Build a fixed-seed 2-D Gaussian mixture from component centers.
+
+    Args:
+        centers: Float tensor of shape (n_components, 2).
+        n_per_component: Number of samples to draw per component.
+        std: Standard deviation of each isotropic Gaussian component.
+        seed: Random seed for reproducibility.
+
+    Returns:
+        Tensor of shape (n_components * n_per_component, 2) of dtype torch.float32.
+    """
+    torch.manual_seed(seed)
+
+    n_components = centers.shape[0]
+    samples = []
+
+    for k in range(n_components):
+        # Draw standard normal samples Z ~ N(0, I) for component k
+        z = torch.randn(n_per_component, 2, dtype=torch.float32, device=centers.device)
+        component_samples = centers[k].to(dtype=torch.float32) + std * z
+        samples.append(component_samples)
+
+    return torch.cat(samples, dim=0)
+

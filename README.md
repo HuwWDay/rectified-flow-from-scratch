@@ -19,6 +19,7 @@ python scaffold.py
 - [x] **7.** sinusoidal_time_embedding
 - [x] **8.** init_velocity_mlp
 - [x] **9.** velocity_mlp_forward
+- [x] **10.** make_mixture_dataset
 
 ---
 
