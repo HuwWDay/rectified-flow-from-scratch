@@ -18,3 +18,10 @@ def target_velocity(x0, x1):
     # TODO: Return the constant straight-path target velocity along the interpolant...
     return x1 - x0
 
+# Step 3 - sample_uniform_time
+def sample_uniform_time(batch_size, seed):
+    """Draw a column of times uniformly from the unit interval."""
+    # TODO: Draw a column of times uniformly from the unit interval...
+    torch.manual_seed(seed)
+    return torch.rand((batch_size, 1))
+
