@@ -13,6 +13,7 @@ python scaffold.py
 - [x] **1.** interpolate_linear
 - [x] **2.** target_velocity
 - [x] **3.** sample_uniform_time
+- [x] **4.** sample_gaussian_noise
 
 ---
 

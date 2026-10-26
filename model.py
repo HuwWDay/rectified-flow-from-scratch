@@ -25,3 +25,10 @@ def sample_uniform_time(batch_size, seed):
     torch.manual_seed(seed)
     return torch.rand((batch_size, 1))
 
+# Step 4 - sample_gaussian_noise
+def sample_gaussian_noise(x, seed):
+    """Return standard normal noise matching the shape of a given tensor using a given seed."""
+    # TODO: Return standard normal noise matching a tensor using a given seed...
+    torch.manual_seed(seed)
+    return torch.randn_like(x)
+
