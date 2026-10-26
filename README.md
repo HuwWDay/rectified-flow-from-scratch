@@ -16,6 +16,7 @@ python scaffold.py
 - [x] **4.** sample_gaussian_noise
 - [x] **5.** make_flow_batch
 - [x] **6.** flow_matching_loss
+- [x] **7.** sinusoidal_time_embedding
 
 ---
 

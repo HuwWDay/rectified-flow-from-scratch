@@ -49,3 +49,34 @@ def flow_matching_loss(v_pred, v_target):
     # TODO: Implement `flow_matching_loss` to score predicted velocities against a target.
     return torch.mean((v_pred-v_target)**2)
 
+# Step 7 - sinusoidal_time_embedding
+import torch
+
+
+def sinusoidal_time_embedding(t: torch.Tensor, embed_dim: int) -> torch.Tensor:
+    """Map each time in t to a sin-cos Fourier feature vector of length embed_dim.
+
+    Args:
+        t: Float tensor of shape (batch,) or (batch, 1).
+        embed_dim: An even positive integer.
+
+    Returns:
+        Float tensor of shape (batch, embed_dim) on the same device and dtype as t.
+    """
+    half = embed_dim // 2
+
+    # Ensure t has shape (batch, 1) for broadcasting across the frequency dimension
+    if t.ndim == 1:
+        t = t.unsqueeze(1)
+
+    # Compute frequencies: freqs[i] = exp(-log(10000) * i / half)
+    # Shape: (half,)
+    indices = torch.arange(half, device=t.device, dtype=t.dtype)
+    freqs = torch.exp(-torch.log(torch.tensor(10000.0, device=t.device, dtype=t.dtype)) * indices / half)
+
+    # Broadcast multiplication: (batch, 1) * (half,) -> (batch, half)
+    args = t * freqs
+
+    # Concatenate [sin, cos] along the feature dimension -> (batch, embed_dim)
+    return torch.cat([torch.sin(args), torch.cos(args)], dim=-1)
+
