@@ -11,6 +11,7 @@ python scaffold.py
 ## Steps
 
 - [x] **1.** interpolate_linear
+- [x] **2.** target_velocity
 
 ---
 
