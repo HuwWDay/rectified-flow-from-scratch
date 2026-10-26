@@ -121,3 +121,44 @@ def init_velocity_mlp(in_dim: int, hidden_dim: int, time_embed_dim: int, seed: i
 
     return params
 
+# Step 9 - velocity_mlp_forward
+import torch
+import torch.nn.functional as F
+
+
+def velocity_mlp_forward(x: torch.Tensor, t, params: dict, time_embed_dim: int) -> torch.Tensor:
+    """Return a velocity of the same shape as x from states, times, and MLP params.
+
+    Args:
+        x: Float tensor of shape (batch, in_dim).
+        t: Scalar or float tensor broadcastable to (batch, 1).
+        params: Parameter dict containing 'W1', 'b1', 'W2', 'b2', 'W3', 'b3'.
+        time_embed_dim: Feature dimension for the sinusoidal time embedding.
+
+    Returns:
+        Predicted velocity v with shape (batch, in_dim).
+    """
+    batch_size = x.shape[0]
+
+    # Convert t to tensor if scalar, match x's device and dtype, and broadcast/reshape to (batch, 1)
+    if not isinstance(t, torch.Tensor):
+        t = torch.tensor(t, device=x.device, dtype=x.dtype)
+    t = t.view(-1, 1).expand(batch_size, 1)
+
+    # Compute sinusoidal time embedding -> (batch, time_embed_dim)
+    t_embed = sinusoidal_time_embedding(t, time_embed_dim)
+
+    # Concatenate spatial state and time embedding -> (batch, in_dim + time_embed_dim)
+    h = torch.cat([x, t_embed], dim=-1)
+
+    # Layer 1 + ReLU
+    h = F.relu(h @ params["W1"] + params["b1"])
+
+    # Layer 2 + ReLU
+    h = F.relu(h @ params["W2"] + params["b2"])
+
+    # Output Layer (linear) -> (batch, in_dim)
+    v = h @ params["W3"] + params["b3"]
+
+    return v
+

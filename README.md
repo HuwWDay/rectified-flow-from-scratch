@@ -18,6 +18,7 @@ python scaffold.py
 - [x] **6.** flow_matching_loss
 - [x] **7.** sinusoidal_time_embedding
 - [x] **8.** init_velocity_mlp
+- [x] **9.** velocity_mlp_forward
 
 ---
 
