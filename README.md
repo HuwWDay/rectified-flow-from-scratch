@@ -20,6 +20,7 @@ python scaffold.py
 - [x] **8.** init_velocity_mlp
 - [x] **9.** velocity_mlp_forward
 - [x] **10.** make_mixture_dataset
+- [x] **11.** flow_train_step
 
 ---
 

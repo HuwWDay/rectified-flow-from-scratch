@@ -193,3 +193,44 @@ def make_mixture_dataset(
 
     return torch.cat(samples, dim=0)
 
+# Step 11 - flow_train_step
+import torch
+
+
+def flow_train_step(params, data, batch_size, lr, time_embed_dim, seed):
+    """Draw a minibatch of data, compute the flow-matching loss through the velocity MLP,
+    and take one manual SGD update.
+    """
+    # 1. Seed RNG for index sampling
+    torch.manual_seed(seed)
+
+    # 2. Sample row indices and extract minibatch
+    n = data.shape[0]
+    indices = torch.randint(0, n, (batch_size,))
+    minibatch = data[indices]
+
+    # 3. Build flow interpolant batch: make_flow_batch returns (xt, v_target, t)
+    xt, ut, t = make_flow_batch(minibatch, seed + 1)
+
+    # 4. Predict velocity with MLP forward pass
+    pred = velocity_mlp_forward(xt, t, params, time_embed_dim)
+
+    # 5. Compute flow-matching loss and record pre-update float value
+    loss = flow_matching_loss(pred, ut)
+    loss_value = float(loss.item())
+
+    # 6. Zero out any existing gradients
+    for p in params.values():
+        if p.grad is not None:
+            p.grad.zero_()
+
+    # 7. Backpropagate
+    loss.backward()
+
+    # 8. In-place SGD update
+    with torch.no_grad():
+        for p in params.values():
+            p.sub_(lr * p.grad)
+
+    return params, loss_value
+
