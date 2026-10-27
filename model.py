@@ -364,3 +364,59 @@ def make_reflow_pairs(
     x1_hat = euler_sample(x0, params, n_steps, time_embed_dim)
     return x0, x1_hat
 
+# Step 20 - rectified_flow_experiment
+import torch
+
+
+def rectified_flow_experiment(
+    n_per_component: int,
+    hidden_dim: int,
+    time_embed_dim: int,
+    n_train_steps: int,
+    batch_size: int,
+    lr: float,
+    n_euler_steps: int,
+    seed: int,
+) -> tuple[float, float]:
+    """Train a 2-D flow on a two-blob mixture and return sample vs baseline MSE floats.
+
+    Args:
+        n_per_component: Number of samples per Gaussian component.
+        hidden_dim: Hidden dimension of the velocity MLP.
+        time_embed_dim: Dimension of the sinusoidal time embedding.
+        n_train_steps: Number of training gradient steps.
+        batch_size: Minibatch size during training.
+        lr: Learning rate for SGD.
+        n_euler_steps: Number of Euler integration steps during sampling.
+        seed: Random seed for data generation and reproducibility offsets.
+
+    Returns:
+        tuple (sample_mse, baseline_mse): Quality metrics as built-in Python floats.
+    """
+    in_dim = 2
+    centers = torch.tensor([[-2.5, 0.0], [2.5, 0.0]], dtype=torch.float32)
+    std = 0.4
+
+    # 1. Build dataset
+    data = make_mixture_dataset(centers, n_per_component, std, seed)
+
+    # 2. Initialize velocity network parameters
+    params = init_velocity_mlp(in_dim, hidden_dim, time_embed_dim, seed + 1)
+
+    # 3. Train the rectified flow model
+    trained_params, _ = train_rectified_flow(
+        params, data, n_train_steps, batch_size, lr, time_embed_dim, seed=seed + 2
+    )
+
+    # 4. Sample noise base distribution
+    noise = sample_gaussian_noise(data, seed + 3)
+
+    # 5. Integrate ODE from t=0 to t=1 using Euler method
+    samples = euler_sample(noise, trained_params, n_euler_steps, time_embed_dim)
+
+    # 6. Evaluate sample and baseline quality against real data
+    sample_mse = float(sample_quality_mse(samples, data).item())
+    baseline_mse = float(sample_quality_mse(noise, data).item())
+
+    return sample_mse, baseline_mse
+
