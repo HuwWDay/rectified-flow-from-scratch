@@ -284,3 +284,32 @@ def euler_sample(x0: torch.Tensor, params: dict, n_steps: int, time_embed_dim: i
 
     return x
 
+# Step 16 - heun_step
+import torch
+
+
+def heun_step(x, t, dt, params, time_embed_dim):
+    """Take one Heun predictor-corrector step of the flow ODE.
+
+    Args:
+        x: (batch, dim) current state.
+        t: scalar or 0-dim current time.
+        dt: float or 0-dim step size.
+        params: velocity-MLP parameter dict.
+        time_embed_dim: even integer time-embedding size.
+
+    Returns:
+        (batch, dim) Heun-updated state.
+    """
+    # 1. Compute initial velocity at (x, t)
+    v1 = velocity_mlp_forward(x, t, params, time_embed_dim)
+
+    # 2. Predictor step: Euler forward to get x_next candidate at t + dt
+    x_pred = euler_step(x, v1, dt)
+
+    # 3. Compute velocity at predicted state (x_pred, t + dt)
+    v2 = velocity_mlp_forward(x_pred, t + dt, params, time_embed_dim)
+
+    # 4. Corrector step: x + 0.5 * dt * (v1 + v2)
+    return x + 0.5 * dt * (v1 + v2)
+

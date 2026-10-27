@@ -25,6 +25,7 @@ python scaffold.py
 - [x] **13.** linspace_timesteps
 - [x] **14.** euler_step
 - [x] **15.** euler_sample
+- [x] **16.** heun_step
 
 ---
 
