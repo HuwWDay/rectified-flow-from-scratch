@@ -313,3 +313,17 @@ def heun_step(x, t, dt, params, time_embed_dim):
     # 4. Corrector step: x + 0.5 * dt * (v1 + v2)
     return x + 0.5 * dt * (v1 + v2)
 
+# Step 17 - heun_sample
+def heun_sample(x0, params, n_steps, time_embed_dim):
+    # TODO: Integrate the velocity ODE from noise at t=0 to data at t=1...
+    timesteps = linspace_timesteps(n_steps)
+    dt = 1.0 / n_steps
+    x = x0
+
+    for i in range(n_steps):
+        t = timesteps[i]
+        v = velocity_mlp_forward(x, t, params, time_embed_dim)
+        x = heun_step(x, t, dt, params, time_embed_dim)
+
+    return x
+

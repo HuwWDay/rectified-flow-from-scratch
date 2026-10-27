@@ -26,6 +26,7 @@ python scaffold.py
 - [x] **14.** euler_step
 - [x] **15.** euler_sample
 - [x] **16.** heun_step
+- [x] **17.** heun_sample
 
 ---
 
