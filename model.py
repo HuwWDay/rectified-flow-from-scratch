@@ -251,3 +251,9 @@ def linspace_timesteps(n_steps):
     # TODO: Return n_steps plus one evenly spaced times from 0 to 1 inclusive.
     return torch.linspace(0, 1, n_steps+1)
 
+# Step 14 - euler_step
+def euler_step(x, v, dt):
+    """Advance a state by one explicit Euler step."""
+    # TODO: Advance a state by one explicit Euler step.
+    return x + torch.dot(dt, v)
+
