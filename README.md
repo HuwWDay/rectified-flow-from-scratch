@@ -22,6 +22,7 @@ python scaffold.py
 - [x] **10.** make_mixture_dataset
 - [x] **11.** flow_train_step
 - [x] **12.** train_rectified_flow
+- [x] **13.** linspace_timesteps
 
 ---
 

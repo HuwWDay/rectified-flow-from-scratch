@@ -246,3 +246,8 @@ def train_rectified_flow(params, data, n_steps, batch_size, lr, time_embed_dim, 
         
     return params, train_loss
 
+# Step 13 - linspace_timesteps
+def linspace_timesteps(n_steps):
+    # TODO: Return n_steps plus one evenly spaced times from 0 to 1 inclusive.
+    return torch.linspace(0, 1, n_steps+1)
+
