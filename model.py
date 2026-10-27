@@ -257,3 +257,30 @@ def euler_step(x, v, dt):
     # TODO: Advance a state by one explicit Euler step.
     return x + dt*v
 
+# Step 15 - euler_sample
+import torch
+
+
+def euler_sample(x0: torch.Tensor, params: dict, n_steps: int, time_embed_dim: int) -> torch.Tensor:
+    """Integrate the velocity ODE from noise at t=0 to data at t=1 using evenly spaced Euler steps.
+
+    Args:
+        x0: Initial noise tensor of shape (batch, dim) at t=0.
+        params: Dictionary of MLP parameters.
+        n_steps: Number of integration steps.
+        time_embed_dim: Dimension of the sinusoidal time embedding.
+
+    Returns:
+        Tensor of shape (batch, dim) representing the transported state at t=1.
+    """
+    timesteps = linspace_timesteps(n_steps)
+    dt = 1.0 / n_steps
+    x = x0
+
+    for i in range(n_steps):
+        t = timesteps[i]
+        v = velocity_mlp_forward(x, t, params, time_embed_dim)
+        x = euler_step(x, v, dt)
+
+    return x
+

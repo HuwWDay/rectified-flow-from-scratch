@@ -24,6 +24,7 @@ python scaffold.py
 - [x] **12.** train_rectified_flow
 - [x] **13.** linspace_timesteps
 - [x] **14.** euler_step
+- [x] **15.** euler_sample
 
 ---
 
