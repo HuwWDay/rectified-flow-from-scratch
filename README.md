@@ -28,6 +28,7 @@ python scaffold.py
 - [x] **16.** heun_step
 - [x] **17.** heun_sample
 - [x] **18.** sample_quality_mse
+- [x] **19.** make_reflow_pairs
 
 ---
 

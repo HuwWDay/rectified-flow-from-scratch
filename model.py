@@ -342,3 +342,25 @@ def sample_quality_mse(samples, data):
     # mean over all samples
     return torch.mean(min_dists)
 
+# Step 19 - make_reflow_pairs
+import torch
+
+
+def make_reflow_pairs(
+    x0: torch.Tensor, params: dict, n_steps: int, time_embed_dim: int
+) -> tuple[torch.Tensor, torch.Tensor]:
+    """Build rectified (noise, generated-data) training pairs from noise.
+
+    Args:
+        x0: Initial noise tensor of shape (batch, dim) at t=0.
+        params: Trained velocity-MLP parameter dictionary.
+        n_steps: Number of integration steps for the Euler sampler.
+        time_embed_dim: Sinusoidal time embedding dimension.
+
+    Returns:
+        tuple (x0, x1_hat): The initial noise and generated state at t=1,
+        both of shape (batch, dim).
+    """
+    x1_hat = euler_sample(x0, params, n_steps, time_embed_dim)
+    return x0, x1_hat
+
