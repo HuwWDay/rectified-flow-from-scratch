@@ -21,6 +21,7 @@ python scaffold.py
 - [x] **9.** velocity_mlp_forward
 - [x] **10.** make_mixture_dataset
 - [x] **11.** flow_train_step
+- [x] **12.** train_rectified_flow
 
 ---
 

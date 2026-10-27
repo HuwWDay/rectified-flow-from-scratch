@@ -234,3 +234,15 @@ def flow_train_step(params, data, batch_size, lr, time_embed_dim, seed):
 
     return params, loss_value
 
+# Step 12 - train_rectified_flow
+def train_rectified_flow(params, data, n_steps, batch_size, lr, time_embed_dim, seed):
+    """Repeat flow_train_step for n_steps and return updated params plus the loss history."""
+    # TODO: train_rectified_flow runs a short training loop for the velocity MLP...
+    train_loss = []
+
+    for step in range(n_steps):
+        params, loss_value = flow_train_step(params, data, batch_size, lr, time_embed_dim, seed = seed + step)
+        train_loss.append(loss_value)
+        
+    return params, train_loss
+
