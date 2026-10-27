@@ -327,3 +327,18 @@ def heun_sample(x0, params, n_steps, time_embed_dim):
 
     return x
 
+# Step 18 - sample_quality_mse
+def sample_quality_mse(samples, data):
+    """Return the mean nearest-neighbor squared Euclidean distance from samples to data."""
+    # TODO: Compute the mean nearest-neighbor squared Euclidean distance from samples to data.
+    # pairwise squared Euclidean distances: shape (n_samples, n_data)
+    # samples[:, None, :] has shape (n_samples, 1, dim)
+    # data[None, :, :] has shape (1, n_data, dim)
+    sq_dists = torch.sum((samples.unsqueeze(1) - data.unsqueeze(0)) ** 2, dim=-1)
+
+    # nearest neighbor distance for each sample: shape (n_samples,)
+    min_dists, _ = torch.min(sq_dists, dim=1)
+
+    # mean over all samples
+    return torch.mean(min_dists)
+

@@ -27,6 +27,7 @@ python scaffold.py
 - [x] **15.** euler_sample
 - [x] **16.** heun_step
 - [x] **17.** heun_sample
+- [x] **18.** sample_quality_mse
 
 ---
 
